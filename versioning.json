@@ -2,16 +2,6 @@
   "buildTime": "2020-08-04T13:37:59.125Z",
   "sources": [
     {
-      "id": "MangaDex",
-      "name": "MangaDex",
-      "author": "Faizan Durrani",
-      "desc": "Extension that pulls manga from MangaDex, includes Advanced Search and Updated manga fetching",
-      "website": "https://github.com/FaizanDurrani",
-      "version": "1.0.18",
-      "icon": "icon.png",
-      "tags": []
-    },
-    {
         "id":"ReaperScans",
         "name":"ReaperScans",
         "author":"Saky",
@@ -20,6 +10,5 @@
         "icon":"icon.png",
         "tags":[]
     }
-   
   ]
 }
