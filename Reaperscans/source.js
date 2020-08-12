@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Reaperscans = void 0;
-const Source_1 = require("../dist/sources/Source");
-const Manga_1 = require("../dist/models/Manga/Manga");
-const Languages_1 = require("../dist/models/Languages/Languages");
+const Source_1 = require("../Source");
+const Manga_1 = require("../../models/Manga/Manga");
+const Languages_1 = require("../../models/Languages/Languages");
 const RS_DOMAIN = "https://reaperscans.com";
 class Reaperscans extends Source_1.Source {
     constructor(cheerio) {
