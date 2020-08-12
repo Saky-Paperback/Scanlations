@@ -15,3 +15,5 @@ docs
 
 # mac stuff
 .DS_Store
+
+src/sources/ReaperScans/LeviatanScans-EXAMPLE.ts
