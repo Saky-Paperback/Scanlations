@@ -84,17 +84,19 @@ export class Reaperscans extends Source{
     
         let json = JSON.parse(data);
 
-        for(let chapter of json){
+        let i:number;
+        for(i = 0; i < json.length; i++){
             chapters.push(createChapter({
-                id:chapter["chapterID"],
+                id:json[i]["chapterID"],
                 mangaId:metadata.mangaId,
                 time:undefined,
-                name:json["chapterTitle"],
+                name:json[i]["chapterTitle"],
                 langCode:LanguageCode.ENGLISH,
-                chapNum:json["chapterNum"],
-                volume:json["volume"],
+                chapNum:json[i]["chapterNum"],
+                volume:json[i]["volume"]
             }))
         }
+
         return chapters;
     }
 
@@ -111,9 +113,11 @@ export class Reaperscans extends Source{
         
         let json = JSON.parse(data);
 
-        for(let page of json){
-            pages.push(page);
+        let i: number;
+        for(i=0; i < json.length; i++){
+            pages.push(json[i]);
         }
+
         let chapterDetails = createChapterDetails({
           id: metadata.chapId,
           mangaId: metadata.mangaId,
@@ -136,13 +140,14 @@ export class Reaperscans extends Source{
 
         let json = JSON.parse(data);
 
-        for(let search of json){
+        let i: number;
+        for(i = 0; i < json.length; i++){
             mangas.push(createMangaTile({
-                id:search["mangaID"],
-                image:search["cover"],
-                title:createIconText({text:search["title"] ?? ""})
+                id:json[i]["mangaID"],
+                image:json[i]["cover"],
+                title:createIconText({text:json[i]["title"] ?? ""})
             }));
-        }   
+        }
 
         return mangas;
 
