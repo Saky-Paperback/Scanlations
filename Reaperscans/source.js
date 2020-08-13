@@ -23,7 +23,7 @@ var Reaperscans = /** @class */ (function (_super) {
     }
     Object.defineProperty(Reaperscans.prototype, "version", {
         get: function () {
-            return "1.2";
+            return "1.2.1";
         },
         enumerable: false,
         configurable: true
@@ -110,16 +110,16 @@ var Reaperscans = /** @class */ (function (_super) {
     Reaperscans.prototype.getChapters = function (data, metadata) {
         var chapters = [];
         var json = JSON.parse(data);
-        for (var _i = 0, json_1 = json; _i < json_1.length; _i++) {
-            var chapter = json_1[_i];
+        var i;
+        for (i = 0; i < json.length; i++) {
             chapters.push(createChapter({
-                id: chapter["chapterID"],
+                id: json[i]["chapterID"],
                 mangaId: metadata.mangaId,
                 time: undefined,
-                name: json["chapterTitle"],
+                name: json[i]["chapterTitle"],
                 langCode: paperback_extensions_common_1.LanguageCode.ENGLISH,
-                chapNum: json["chapterNum"],
-                volume: json["volume"]
+                chapNum: json[i]["chapterNum"],
+                volume: json[i]["volume"]
             }));
         }
         return chapters;
@@ -134,9 +134,9 @@ var Reaperscans = /** @class */ (function (_super) {
     Reaperscans.prototype.getChapterDetails = function (data, metadata) {
         var pages = [];
         var json = JSON.parse(data);
-        for (var _i = 0, json_2 = json; _i < json_2.length; _i++) {
-            var page = json_2[_i];
-            pages.push(page);
+        var i;
+        for (i = 0; i < json.length; i++) {
+            pages.push(json[i]);
         }
         var chapterDetails = createChapterDetails({
             id: metadata.chapId,
@@ -156,12 +156,12 @@ var Reaperscans = /** @class */ (function (_super) {
         var _a;
         var mangas = [];
         var json = JSON.parse(data);
-        for (var _i = 0, json_3 = json; _i < json_3.length; _i++) {
-            var search = json_3[_i];
+        var i;
+        for (i = 0; i < json.length; i++) {
             mangas.push(createMangaTile({
-                id: search["mangaID"],
-                image: search["cover"],
-                title: createIconText({ text: (_a = search["title"]) !== null && _a !== void 0 ? _a : "" })
+                id: json[i]["mangaID"],
+                image: json[i]["cover"],
+                title: createIconText({ text: (_a = json[i]["title"]) !== null && _a !== void 0 ? _a : "" })
             }));
         }
         return mangas;

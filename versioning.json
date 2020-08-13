@@ -6,7 +6,7 @@
         "name":"Reaperscans",
         "author":"Saky",
         "desc":"Extension that pulls manga from reaperscans",
-        "version":"1.2",
+        "version":"1.2.1",
         "icon":"icon.png",
         "tags":[]
     }
