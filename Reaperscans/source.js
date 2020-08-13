@@ -15,7 +15,7 @@ var __extends = (this && this.__extends) || (function () {
 exports.__esModule = true;
 exports.Reaperscans = void 0;
 var paperback_extensions_common_1 = require("paperback-extensions-common");
-var RS_DOMAIN = "https://reaperscans.com";
+var RS_DOMAIN = "http://saky-paperback.ml/extension";
 var Reaperscans = /** @class */ (function (_super) {
     __extends(Reaperscans, _super);
     function Reaperscans(cheerio) {
@@ -23,7 +23,7 @@ var Reaperscans = /** @class */ (function (_super) {
     }
     Object.defineProperty(Reaperscans.prototype, "version", {
         get: function () {
-            return "1.1";
+            return "1.2";
         },
         enumerable: false,
         configurable: true
@@ -69,7 +69,7 @@ var Reaperscans = /** @class */ (function (_super) {
             var id = ids_1[_i];
             var metadata = { "id": id };
             requests.push(createRequestObject({
-                url: RS_DOMAIN + "/comics/" + id,
+                url: RS_DOMAIN + "/mangaDetails.php?mangaID=" + id,
                 metadata: metadata,
                 method: "GET"
             }));
@@ -78,17 +78,11 @@ var Reaperscans = /** @class */ (function (_super) {
     };
     Reaperscans.prototype.getMangaDetails = function (data, metadata) {
         var mangas = [];
-        var $ = this.cheerio.load(data);
-        var cover = RS_DOMAIN + $("a.media-content").attr("style").replace("background-image:url(", "").replace(")", "").toString();
-        var title = $("h5.text-highlight").first().text().trim();
-        // TODO: Implement isAdult check
-        var description = $("div.col-lg-9")
-            .clone()
-            .children()
-            .remove()
-            .end()
-            .text()
-            .trim();
+        var json = JSON.parse(data);
+        var title = json["title"];
+        var desc = json["desc"];
+        var cover = json["cover"];
+        var isAdult = json["isAdult"];
         var status = paperback_extensions_common_1.MangaStatus.ONGOING;
         var titles = [];
         titles.push(title);
@@ -101,105 +95,75 @@ var Reaperscans = /** @class */ (function (_super) {
             author: "Unknown",
             artist: "Unknown",
             tags: [],
-            desc: description,
-            hentai: false
+            desc: desc,
+            hentai: isAdult
         }));
         return mangas;
     };
     Reaperscans.prototype.getChaptersRequest = function (mangaId) {
         return createRequestObject({
-            url: RS_DOMAIN + "/comics/" + mangaId,
+            url: RS_DOMAIN + "/chapters.php?mangaID=" + mangaId,
             method: "GET",
             metadata: { mangaId: mangaId }
         });
     };
     Reaperscans.prototype.getChapters = function (data, metadata) {
-        var $ = this.cheerio.load(data);
         var chapters = [];
-        var rawChapters = $("div.list-item.col-sm-3").toArray();
-        for (var _i = 0, rawChapters_1 = rawChapters; _i < rawChapters_1.length; _i++) {
-            var element = rawChapters_1[_i];
-            var title = $("div.flex", element).children().first().text().trim();
-            var chapterNumbers = $("div.flex a.item-author", element).attr("href").replace(RS_DOMAIN + "/comics/" + metadata.mangaId + "/", "").split("/");
-            var chapterId = chapterNumbers[1];
-            var chapterNumber = parseInt(chapterNumbers[1]);
-            var volume = parseInt(chapterNumbers[0]);
+        var json = JSON.parse(data);
+        for (var _i = 0, json_1 = json; _i < json_1.length; _i++) {
+            var chapter = json_1[_i];
             chapters.push(createChapter({
-                id: chapterId,
+                id: chapter["chapterID"],
                 mangaId: metadata.mangaId,
                 time: undefined,
-                name: title,
+                name: json["chapterTitle"],
                 langCode: paperback_extensions_common_1.LanguageCode.ENGLISH,
-                chapNum: chapterNumber,
-                volume: volume
+                chapNum: json["chapterNum"],
+                volume: json["volume"]
             }));
         }
         return chapters;
     };
     Reaperscans.prototype.getChapterDetailsRequest = function (mangaId, chapId) {
         return createRequestObject({
-            url: RS_DOMAIN + "/comics/" + mangaId + "/1/" + chapId,
+            url: RS_DOMAIN + "/chapterDetails.php?mangaID=" + mangaId + "&chapID=" + chapId,
             method: "GET",
             metadata: { mangaId: mangaId, chapId: chapId }
         });
     };
     Reaperscans.prototype.getChapterDetails = function (data, metadata) {
-        var $ = this.cheerio.load(data);
-        var script = $("script").get();
         var pages = [];
-        var toBeEvaledRaw = "";
-        for (var _i = 0, script_1 = script; _i < script_1.length; _i++) {
-            var i = script_1[_i];
-            if (i["children"][0] !== undefined) {
-                if (i["children"][0]["data"].includes("window.chapterPages")) {
-                    toBeEvaledRaw = i["children"][0]["data"].split("window.slug = \"" + metadata.mangaId + "\";")[1];
-                }
-            }
-        }
-        var toBeEvaled = toBeEvaledRaw
-            .split("window.nextChapter")[0]
-            .replace("window.chapterPages", "let chapPages");
-        toBeEvaled += "new Array(chapPages)";
-        var evaled = eval(toBeEvaled)[0];
-        for (var _a = 0, evaled_1 = evaled; _a < evaled_1.length; _a++) {
-            var part = evaled_1[_a];
-            pages.push("https://reaperscans.com" + part);
+        var json = JSON.parse(data);
+        for (var _i = 0, json_2 = json; _i < json_2.length; _i++) {
+            var page = json_2[_i];
+            pages.push(page);
         }
         var chapterDetails = createChapterDetails({
             id: metadata.chapId,
             mangaId: metadata.mangaId,
             pages: pages,
-            longStrip: false
+            longStrip: true
         });
         return chapterDetails;
     };
     Reaperscans.prototype.searchRequest = function (query, page) {
         return createRequestObject({
-            url: RS_DOMAIN + "/comics?query=" + escape(query.title.replace(" ", "+")),
+            url: RS_DOMAIN + "/search.php?q=" + escape(query.title.replace(" ", "+")),
             method: "GET"
         });
     };
     Reaperscans.prototype.search = function (data) {
-        var $ = this.cheerio.load(data);
+        var _a;
         var mangas = [];
-        $("div.list-item").each(function (index, manga) {
-            var chapterIdRaw = $("div.list-content div.list-body a", manga).attr("href").split("/");
-            var chapterIdClean = chapterIdRaw.filter(function (i) {
-                return i != "" && i != null;
-            });
-            var chapterId = "";
-            if (chapterIdClean && chapterIdClean.length > 1) {
-                chapterId = chapterIdClean.pop().toString();
-            }
-            var title = $("div.list-content div.list-body a", manga).text().trim();
-            var tag = $("div.media a", manga).attr("style").match(/\((.*?)\)/);
-            var image = RS_DOMAIN + tag[1];
+        var json = JSON.parse(data);
+        for (var _i = 0, json_3 = json; _i < json_3.length; _i++) {
+            var search = json_3[_i];
             mangas.push(createMangaTile({
-                id: chapterId,
-                image: image,
-                title: createIconText({ text: title !== null && title !== void 0 ? title : "" })
+                id: search["mangaID"],
+                image: search["cover"],
+                title: createIconText({ text: (_a = search["title"]) !== null && _a !== void 0 ? _a : "" })
             }));
-        });
+        }
         return mangas;
     };
     return Reaperscans;
