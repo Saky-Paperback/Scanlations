@@ -23,7 +23,7 @@ var Reaperscans = /** @class */ (function (_super) {
     }
     Object.defineProperty(Reaperscans.prototype, "version", {
         get: function () {
-            return "1.2.4";
+            return "1.3";
         },
         enumerable: false,
         configurable: true
