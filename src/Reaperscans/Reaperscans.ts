@@ -9,7 +9,7 @@ export class Reaperscans extends Source{
     }
 
     get version(): string {
-        return "1.2"; 
+        return "1.2.3"; 
     }
     get name(): string {
         return "Reaperscans";
