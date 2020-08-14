@@ -1,5 +1,4 @@
-#compiled files and the monstor that node usually is
-node_modules
+-node_modules
 dist
 bundles
 
@@ -16,4 +15,3 @@ docs
 # mac stuff
 .DS_Store
 
-src/sources/ReaperScans/LeviatanScans-EXAMPLE.ts
