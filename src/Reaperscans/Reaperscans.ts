@@ -9,7 +9,7 @@ export class Reaperscans extends Source{
     }
 
     get version(): string {
-        return "1.2.3"; 
+        return "1.3.0"; 
     }
     get name(): string {
         return "Reaperscans";
@@ -151,6 +151,35 @@ export class Reaperscans extends Source{
 
         return mangas;
 
+      }
+
+
+      getHomePageSectionRequest(): HomeSectionRequest[] | null {
+          let request = createRequestObject({"url":`${RS_DOMAIN}`,method:"GET"});
+          let section1 = createHomeSection({"id":"new_releases","title":"NEW RELEASES"});
+
+          return [createHomeSectionRequest({request:request,sections: [section1]})];
+      }
+
+      getHomePageSections(data: any, sections: HomeSection[]): HomeSection[] {
+          let json = JSON.parse(data);
+          let newReleases: MangaTile[] = [];
+
+          let i: number;
+          for(i = 0; i < json.length; i++){
+              let title = json[i]["title"];
+              let cover = json[i]["cover"];
+              let mangaId = json[i]["mangaID"];
+
+              newReleases.push(createMangaTile({
+                id:mangaId,
+                image:cover,
+                title:createIconText({text:title})
+              }));
+          }
+
+          sections[0].items = newReleases;
+          return sections;
       }
     
 }
