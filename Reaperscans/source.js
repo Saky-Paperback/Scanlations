@@ -703,6 +703,36 @@ module.exports = function mergeConfig(config1, config2) {
     .keys(config2)
     .filter(function filterAxiosKeys(key) {
       return axiosKeys.indexOf(key) === -1;
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Reaperscans = void 0;
+var paperback_extensions_common_1 = require("paperback-extensions-common");
+var RS_DOMAIN = "http://saky-paperback.ml/extension";
+var Reaperscans = /** @class */ (function (_super) {
+    __extends(Reaperscans, _super);
+    function Reaperscans(cheerio) {
+        return _super.call(this, cheerio) || this;
+    }
+    Object.defineProperty(Reaperscans.prototype, "version", {
+        get: function () {
+            return "1.3";
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Reaperscans.prototype, "name", {
+        get: function () {
+            return "Reaperscans";
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Reaperscans.prototype, "icon", {
+        get: function () {
+            return "icon.png";
+        },
+        enumerable: false,
+        configurable: true
     });
 
   utils.forEach(otherKeys, function otherKeysDefaultToConfig2(prop) {
