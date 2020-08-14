@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Reaperscans = void 0;
 var paperback_extensions_common_1 = require("paperback-extensions-common");
 var RS_DOMAIN = "http://saky-paperback.ml/extension";
@@ -23,7 +23,7 @@ var Reaperscans = /** @class */ (function (_super) {
     }
     Object.defineProperty(Reaperscans.prototype, "version", {
         get: function () {
-            return "1.2.1";
+            return "1.2.2";
         },
         enumerable: false,
         configurable: true
@@ -71,7 +71,7 @@ var Reaperscans = /** @class */ (function (_super) {
             requests.push(createRequestObject({
                 url: RS_DOMAIN + "/mangaDetails.php?mangaID=" + id,
                 metadata: metadata,
-                method: "GET"
+                method: "GET",
             }));
         }
         return requests;
@@ -104,7 +104,7 @@ var Reaperscans = /** @class */ (function (_super) {
         return createRequestObject({
             url: RS_DOMAIN + "/chapters.php?mangaID=" + mangaId,
             method: "GET",
-            metadata: { mangaId: mangaId }
+            metadata: { mangaId: mangaId },
         });
     };
     Reaperscans.prototype.getChapters = function (data, metadata) {
@@ -128,7 +128,7 @@ var Reaperscans = /** @class */ (function (_super) {
         return createRequestObject({
             url: RS_DOMAIN + "/chapterDetails.php?mangaID=" + mangaId + "&chapID=" + chapId,
             method: "GET",
-            metadata: { mangaId: mangaId, chapId: chapId }
+            metadata: { mangaId: mangaId, chapId: chapId },
         });
     };
     Reaperscans.prototype.getChapterDetails = function (data, metadata) {
@@ -142,14 +142,14 @@ var Reaperscans = /** @class */ (function (_super) {
             id: metadata.chapId,
             mangaId: metadata.mangaId,
             pages: pages,
-            longStrip: true
+            longStrip: true,
         });
         return chapterDetails;
     };
     Reaperscans.prototype.searchRequest = function (query, page) {
         return createRequestObject({
             url: RS_DOMAIN + "/search.php?q=" + escape(query.title.replace(" ", "+")),
-            method: "GET"
+            method: "GET",
         });
     };
     Reaperscans.prototype.search = function (data) {
