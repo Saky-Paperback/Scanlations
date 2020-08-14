@@ -703,36 +703,6 @@ module.exports = function mergeConfig(config1, config2) {
     .keys(config2)
     .filter(function filterAxiosKeys(key) {
       return axiosKeys.indexOf(key) === -1;
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Reaperscans = void 0;
-var paperback_extensions_common_1 = require("paperback-extensions-common");
-var RS_DOMAIN = "http://saky-paperback.ml/extension";
-var Reaperscans = /** @class */ (function (_super) {
-    __extends(Reaperscans, _super);
-    function Reaperscans(cheerio) {
-        return _super.call(this, cheerio) || this;
-    }
-    Object.defineProperty(Reaperscans.prototype, "version", {
-        get: function () {
-            return "1.3";
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Reaperscans.prototype, "name", {
-        get: function () {
-            return "Reaperscans";
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Reaperscans.prototype, "icon", {
-        get: function () {
-            return "icon.png";
-        },
-        enumerable: false,
-        configurable: true
     });
 
   utils.forEach(otherKeys, function otherKeysDefaultToConfig2(prop) {
@@ -2635,7 +2605,7 @@ class Reaperscans extends paperback_extensions_common_1.Source {
         super(cheerio);
     }
     get version() {
-        return "1.2.4";
+        return "1.3.0";
     }
     get name() {
         return "Reaperscans";
@@ -2754,6 +2724,28 @@ class Reaperscans extends paperback_extensions_common_1.Source {
             }));
         }
         return mangas;
+    }
+    getHomePageSectionRequest() {
+        let request = createRequestObject({ "url": `${RS_DOMAIN}`, method: "GET" });
+        let section1 = createHomeSection({ "id": "new_releases", "title": "NEW RELEASES" });
+        return [createHomeSectionRequest({ request: request, sections: [section1] })];
+    }
+    getHomePageSections(data, sections) {
+        let json = JSON.parse(data);
+        let newReleases = [];
+        let i;
+        for (i = 0; i < json.length; i++) {
+            let title = json[i]["title"];
+            let cover = json[i]["cover"];
+            let mangaId = json[i]["mangaID"];
+            newReleases.push(createMangaTile({
+                id: mangaId,
+                image: cover,
+                title: createIconText({ text: title })
+            }));
+        }
+        sections[0].items = newReleases;
+        return sections;
     }
 }
 exports.Reaperscans = Reaperscans;
