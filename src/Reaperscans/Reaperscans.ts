@@ -130,7 +130,7 @@ export class Reaperscans extends Source{
 
       searchRequest(query: SearchRequest, page: number): Request | null {
         return createRequestObject({
-            url:`${RS_DOMAIN}/search.php?q=${escape(query.title.replace(" ","+"))}`,
+            url:`${RS_DOMAIN}/search.php?q=${escape(query.title?.replace(" ","+")!)}`,
             method:"GET",
           });
       }
