@@ -23,7 +23,7 @@ var Reaperscans = /** @class */ (function (_super) {
     }
     Object.defineProperty(Reaperscans.prototype, "version", {
         get: function () {
-            return "1.2.3";
+            return "1.2.4";
         },
         enumerable: false,
         configurable: true
@@ -147,8 +147,9 @@ var Reaperscans = /** @class */ (function (_super) {
         return chapterDetails;
     };
     Reaperscans.prototype.searchRequest = function (query, page) {
+        var _a;
         return createRequestObject({
-            url: RS_DOMAIN + "/search.php?q=" + escape(query.title.replace(" ", "+")),
+            url: RS_DOMAIN + "/search.php?q=" + escape((_a = query.title) === null || _a === void 0 ? void 0 : _a.replace(" ", "+")),
             method: "GET",
         });
     };
