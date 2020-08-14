@@ -1,90 +1,51 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Reaperscans = void 0;
-var paperback_extensions_common_1 = require("paperback-extensions-common");
-var RS_DOMAIN = "http://saky-paperback.ml/extension";
-var Reaperscans = /** @class */ (function (_super) {
-    __extends(Reaperscans, _super);
-    function Reaperscans(cheerio) {
-        return _super.call(this, cheerio) || this;
+const paperback_extensions_common_1 = require("paperback-extensions-common");
+const RS_DOMAIN = "http://saky-paperback.ml/extension";
+class Reaperscans extends paperback_extensions_common_1.Source {
+    constructor(cheerio) {
+        super(cheerio);
     }
-    Object.defineProperty(Reaperscans.prototype, "version", {
-        get: function () {
-            return "1.2.2";
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Reaperscans.prototype, "name", {
-        get: function () {
-            return "Reaperscans";
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Reaperscans.prototype, "icon", {
-        get: function () {
-            return "icon.png";
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Reaperscans.prototype, "author", {
-        get: function () {
-            return "Saky";
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Reaperscans.prototype, "description", {
-        get: function () {
-            return "Extension that pulls manga from reaper scans";
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Reaperscans.prototype, "hentaiSource", {
-        get: function () {
-            return false;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Reaperscans.prototype.getMangaDetailsRequest = function (ids) {
-        var requests = [];
-        for (var _i = 0, ids_1 = ids; _i < ids_1.length; _i++) {
-            var id = ids_1[_i];
-            var metadata = { "id": id };
+    get version() {
+        return "1.2.3";
+    }
+    get name() {
+        return "Reaperscans";
+    }
+    get icon() {
+        return "icon.png";
+    }
+    get author() {
+        return "Saky";
+    }
+    get description() {
+        return "Extension that pulls manga from reaper scans";
+    }
+    get hentaiSource() {
+        return false;
+    }
+    getMangaDetailsRequest(ids) {
+        let requests = [];
+        for (let id of ids) {
+            let metadata = { "id": id };
             requests.push(createRequestObject({
-                url: RS_DOMAIN + "/mangaDetails.php?mangaID=" + id,
+                url: `${RS_DOMAIN}/mangaDetails.php?mangaID=${id}`,
                 metadata: metadata,
                 method: "GET",
             }));
         }
         return requests;
-    };
-    Reaperscans.prototype.getMangaDetails = function (data, metadata) {
-        var mangas = [];
-        var json = JSON.parse(data);
-        var title = json["title"];
-        var desc = json["desc"];
-        var cover = json["cover"];
-        var isAdult = json["isAdult"];
-        var status = paperback_extensions_common_1.MangaStatus.ONGOING;
-        var titles = [];
+    }
+    getMangaDetails(data, metadata) {
+        let mangas = [];
+        let json = JSON.parse(data);
+        let title = json["title"];
+        let desc = json["desc"];
+        let cover = json["cover"];
+        let isAdult = json["isAdult"];
+        let status = paperback_extensions_common_1.MangaStatus.ONGOING;
+        let titles = [];
         titles.push(title);
         mangas.push(createManga({
             id: metadata.id,
@@ -99,18 +60,18 @@ var Reaperscans = /** @class */ (function (_super) {
             hentai: isAdult
         }));
         return mangas;
-    };
-    Reaperscans.prototype.getChaptersRequest = function (mangaId) {
+    }
+    getChaptersRequest(mangaId) {
         return createRequestObject({
-            url: RS_DOMAIN + "/chapters.php?mangaID=" + mangaId,
+            url: `${RS_DOMAIN}/chapters.php?mangaID=${mangaId}`,
             method: "GET",
-            metadata: { mangaId: mangaId },
+            metadata: { mangaId },
         });
-    };
-    Reaperscans.prototype.getChapters = function (data, metadata) {
-        var chapters = [];
-        var json = JSON.parse(data);
-        var i;
+    }
+    getChapters(data, metadata) {
+        let chapters = [];
+        let json = JSON.parse(data);
+        let i;
         for (i = 0; i < json.length; i++) {
             chapters.push(createChapter({
                 id: json[i]["chapterID"],
@@ -123,40 +84,40 @@ var Reaperscans = /** @class */ (function (_super) {
             }));
         }
         return chapters;
-    };
-    Reaperscans.prototype.getChapterDetailsRequest = function (mangaId, chapId) {
+    }
+    getChapterDetailsRequest(mangaId, chapId) {
         return createRequestObject({
-            url: RS_DOMAIN + "/chapterDetails.php?mangaID=" + mangaId + "&chapID=" + chapId,
+            url: `${RS_DOMAIN}/chapterDetails.php?mangaID=${mangaId}&chapID=${chapId}`,
             method: "GET",
-            metadata: { mangaId: mangaId, chapId: chapId },
+            metadata: { mangaId, chapId },
         });
-    };
-    Reaperscans.prototype.getChapterDetails = function (data, metadata) {
-        var pages = [];
-        var json = JSON.parse(data);
-        var i;
+    }
+    getChapterDetails(data, metadata) {
+        let pages = [];
+        let json = JSON.parse(data);
+        let i;
         for (i = 0; i < json.length; i++) {
             pages.push(json[i]);
         }
-        var chapterDetails = createChapterDetails({
+        let chapterDetails = createChapterDetails({
             id: metadata.chapId,
             mangaId: metadata.mangaId,
             pages: pages,
             longStrip: true,
         });
         return chapterDetails;
-    };
-    Reaperscans.prototype.searchRequest = function (query, page) {
+    }
+    searchRequest(query, page) {
         return createRequestObject({
-            url: RS_DOMAIN + "/search.php?q=" + escape(query.title.replace(" ", "+")),
+            url: `${RS_DOMAIN}/search.php?q=${escape(query.title.replace(" ", "+"))}`,
             method: "GET",
         });
-    };
-    Reaperscans.prototype.search = function (data) {
+    }
+    search(data) {
         var _a;
-        var mangas = [];
-        var json = JSON.parse(data);
-        var i;
+        let mangas = [];
+        let json = JSON.parse(data);
+        let i;
         for (i = 0; i < json.length; i++) {
             mangas.push(createMangaTile({
                 id: json[i]["mangaID"],
@@ -165,7 +126,6 @@ var Reaperscans = /** @class */ (function (_super) {
             }));
         }
         return mangas;
-    };
-    return Reaperscans;
-}(paperback_extensions_common_1.Source));
+    }
+}
 exports.Reaperscans = Reaperscans;
