@@ -1,14 +1,1 @@
-{
-  "buildTime": "2020-08-04T13:37:59.125Z",
-  "sources": [
-    {
-        "id":"Reaperscans",
-        "name":"Reaperscans",
-        "author":"Saky",
-        "desc":"Extension that pulls manga from reaperscans",
-        "version":"1.2.4",
-        "icon":"icon.png",
-        "tags":[]
-    }
-  ]
-}
+{"buildTime":"2020-08-14T11:37:58.747Z","sources":[{"id":"Reaperscans","name":"Reaperscans","author":"Saky","desc":"Extension that pulls manga from reaper scans","website":null,"version":"1.2.4","icon":"icon.png","tags":[]}]}
